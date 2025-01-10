@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\{
     AuthController,
     UserController,
+    LadiesController
 };
 
 
@@ -23,6 +24,15 @@ Route::prefix('v1')->group(function () {
             Route::put('/{id}', 'update');    // Update a user
             Route::delete('/{id}', 'destroy');// Delete a user
         });
+
+        Route::controller(LadiesController::class)->prefix('ladies')->group(function () {
+            Route::get('/', 'index');          // List all ladies
+            Route::post('/', 'store');        // Create a new lady
+            Route::get('/{id}', 'show');      // Get a specific lady
+            Route::put('/{id}', 'update');    // Update a lady
+            Route::delete('/{id}', 'destroy');// Delete a lady
+        });
+
     });
 
 });
