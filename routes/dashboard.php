@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\{
     AuthController,
     UserController,
-    LadiesController
+    LadiesController,
+    RoomController
 };
 
 
@@ -31,6 +32,14 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', 'show');      // Get a specific lady
             Route::put('/{id}', 'update');    // Update a lady
             Route::delete('/{id}', 'destroy');// Delete a lady
+        });
+
+        Route::controller(RoomController::class)->prefix('rooms')->group(function () {
+            Route::get('/', 'index');          // List all rooms
+            Route::post('/', 'store');        // Create a new room
+            Route::get('/{id}', 'show');      // Get a specific room
+            Route::put('/{id}', 'update');    // Update a room
+            Route::delete('/{id}', 'destroy');// Delete a room
         });
 
     });
