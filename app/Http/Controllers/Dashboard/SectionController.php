@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Room;
+use App\Models\Section;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\RoomStoreRequest;
-use App\Http\Requests\Dashboard\RoomUpdateRequest;
+use App\Http\Requests\Dashboard\SectionStoreRequest;
+use App\Http\Requests\Dashboard\SectionUpdateRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class SectionController extends Controller
 {
-    public function index()
+     public function index()
     {
         DB::beginTransaction();
 
         try {
-            $room = Room::searchQuery()
+            $section = Section::searchQuery()
                 ->sortingQuery()
                 ->filterQuery()
                 ->filterDateQuery()
@@ -24,24 +24,24 @@ class RoomController extends Controller
 
             DB::commit();
 
-            return $this->success('Room list is successfully retrived', $room);
+            return $this->success('Section list is successfully retrived', $section);
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    public function store(RoomStoreRequest $request)
+    public function store(SectionStoreRequest $request)
     {
         DB::beginTransaction();
         try {
             $payload = collect($request->validated())
                 ->toArray();    
-            $room = Room::create($payload);
+            $section = Section::create($payload);
 
             DB::commit();
 
-            return $this->success('Room is successfully created', $room);
+            return $this->success('Section is successfully created', $section);
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -53,30 +53,30 @@ class RoomController extends Controller
         DB::beginTransaction();
 
         try {
-            $room = Room::findOrFail($id);
+            $section = Section::findOrFail($id);
 
             DB::commit();
 
-            return $this->success('Room is successfully retrived', $room);
+            return $this->success('Section is successfully retrived', $section);
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    public function update(RoomUpdateRequest $request, $id)
+    public function update(SectionUpdateRequest $request, $id)
     {
         DB::beginTransaction();
 
         try {
-            $room = Room::findOrFail($id);
+            $section = Section::findOrFail($id);
             $payload = collect($request->validated())
                 ->toArray();
-            $room->update($payload);
+            $section->update($payload);
 
             DB::commit();
 
-            return $this->success('Room is successfully updated', $room);
+            return $this->success('Section is successfully updated', $section);
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -88,12 +88,12 @@ class RoomController extends Controller
         DB::beginTransaction();
 
         try {
-            $room = Room::findOrFail($id);
-            $room->delete();
+            $section = Section::findOrFail($id);
+            $section->delete();
 
             DB::commit();
 
-            return $this->success('Room is successfully deleted', $room);
+            return $this->success('Section is successfully deleted', $section);
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
