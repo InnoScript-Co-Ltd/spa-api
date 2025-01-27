@@ -14,6 +14,18 @@ Route::prefix('v1')->group(function () {
 
     Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
 
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('refresh-token', [AuthController::class, 'refresh'])
+            ->name('refresh');
+    });
+
+Route::prefix('me')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', function () {
+        return response()->json('OK');
+    })->name('test');
+});    
+    
+
     // Protect routes with Sanctum authentication middleware
     Route::middleware('auth:sanctum')->group(function () {
         // Route to get the authenticated user's information
