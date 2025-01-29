@@ -13,17 +13,27 @@ use App\Http\Controllers\Dashboard\{
 Route::prefix('v1')->group(function () {
 
     Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/auth/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
+    // For Password Reset Form
+    Route::get('/auth/reset-password/{token}', function ($token) {
+        return view('auth.passwords.reset', ['token' => $token]);
+    })->name('password.reset');
+    Route::post('/auth/reset-password', [AuthController::class, 'resetPassword'])->name('resetPassword');
+    Route::get('/auth/send-test-email', [AuthController::class, 'sendTestEmail'])->name('sendTestEmail');
+
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('refresh-token', [AuthController::class, 'refresh'])
             ->name('refresh');
     });
 
-Route::prefix('me')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/', function () {
-        return response()->json('OK');
-    })->name('test');
-});    
+    Route::prefix('me')->middleware(['auth:sanctum'])->group(function () {
+        Route::get('/', function () {
+            return response()->json('OK');
+        })->name('test');
+    });    
     
 
     // Protect routes with Sanctum authentication middleware

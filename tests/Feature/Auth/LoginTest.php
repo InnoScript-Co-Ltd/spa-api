@@ -1,12 +1,59 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
-    //.. some other tests
+
+    public function testCannotLoginWithoutRequiredFields(): void
+    {
+        $response = $this->postJson(route('login'));
+
+        $response->assertStatus(422);
+
+        $response->assertInvalid(['password', 'email']);
+
+        $response->assertJsonFragment([
+            'status' => false,
+            'message' => 'Validation errors',
+        ]);
+    }
+
+    public function testCannotLoginWithWrongPassword(): void
+    {
+        $user = AuthTestHelper::mockUser();
+
+        $response = $this->postJson(route('login'), [
+            'email' => $user->email,
+            'password' => 'incorrect',
+        ]);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'status' => false,
+            'message' => 'Wrong credentials.',
+        ]);
+
+        AuthTestHelper::clearUser($user);
+    }
+
+    public function testCannotLoginWithWrongEmail(): void
+    {
+        $response = $this->postJson(route('login'), [
+            'email' => 'unexists@mail.example',
+            'password' => 'incorrect',
+        ]);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'status' => false,
+            'message' => 'Wrong credentials.',
+        ]);
+    }
 
     public function testCanLogin(): void
     {
@@ -73,6 +120,52 @@ class LoginTest extends TestCase
         AuthTestHelper::clearUser($user);
     }
 
+    public function testCanRefreshTokenAfterLogin(): void
+    {
+        $user = AuthTestHelper::mockUser();
+
+        $response = $this->postJson(route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertCookieNotExpired(
+            'refreshToken'
+        );
+
+        $refreshToken = $response->getCookie('refreshToken', false)->getValue();
+
+        $accessToken = $response->decodeResponseJson()['data']['accessToken'];
+
+        // Manually make access token expired
+        $this->travel(config('sanctum.expiration') + 5)->minutes();
+        $this->assertFalse(AuthTestHelper::verifyAccessToken($accessToken));
+
+        $response = $this
+            ->withCookie('refreshToken', $refreshToken)
+            ->withCredentials()
+            ->withHeader('Authorization', 'Bearer ' . $accessToken)
+            ->postJson(route('refresh'));
+
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
+                'accessToken'
+            ]
+        ]);
+
+        $accessToken = $response->decodeResponseJson()['data']['accessToken'];
+
+        $this->assertTrue(AuthTestHelper::verifyAccessToken($accessToken));
+
+        AuthTestHelper::clearUser($user);
+    }
 
     public function testAccessTokenExpiration(): void
     {
