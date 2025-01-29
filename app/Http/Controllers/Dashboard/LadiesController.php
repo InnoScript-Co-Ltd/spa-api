@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Ladies;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Dashboard\LadiesStoreRequest;
 use App\Http\Requests\Dashboard\LadiesUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class LadiesController extends Controller
+class LadiesController extends ApiController
 {
     public function index()
     {
@@ -25,7 +25,7 @@ class LadiesController extends Controller
 
             DB::commit();
 
-            return $this->success('Ladies list is successfully retrived', $ladies);
+            return $this->successResponse($ladies, 'Ladies list is successfully retrived');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -42,7 +42,7 @@ class LadiesController extends Controller
 
             DB::commit();
 
-            return $this->success('Ladies is successfully created', $ladies);
+            return $this->successResponse($ladies, 'Ladies is successfully created');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -58,7 +58,7 @@ class LadiesController extends Controller
 
             DB::commit();
 
-            return $this->success('Ladies is successfully retrived', $ladies);
+            return $this->successResponse($ladies ,'Ladies is successfully retrived');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -77,7 +77,7 @@ class LadiesController extends Controller
 
             DB::commit();
 
-            return $this->success('Ladies is successfully updated', $ladies);
+            return $this->successResponse($ladies, 'Ladies is successfully updated');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -94,7 +94,7 @@ class LadiesController extends Controller
 
             DB::commit();
 
-            return $this->success('Ladies is successfully deleted', $ladies);
+            return $this->successResponse($ladies, 'Ladies is successfully deleted');
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
