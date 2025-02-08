@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->snowflakeIdAndPrimary();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('username');
             $table->string('password');
+            $table->string('email')->unique()->nullable()->default(null);
+            $table->string('phone')->unique()->nullable()->default(null);
+            $table->timestamp('phone_confirm_at')->nullable()->default(null);
+            $table->timestamp('email_confirm_at')->nullable()->default(null);
+            $table->string('role');
+            $table->string('status');
             $table->rememberToken();
             $table->auditColumns();
         });
