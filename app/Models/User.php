@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Traits\SnowflakeID;
 use App\Traits\BasicAudit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasApiTokens, Notifiable, SnowflakeID, BasicAudit, SoftDeletes;
+    use HasFactory, HasApiTokens, Notifiable, BasicAudit, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
