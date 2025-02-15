@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sections', function (Blueprint $table) {
-            $table->snowflakeIdAndPrimary();
-            $table->snowflakeId("lady_id");
-            $table->snowflakeId("room_id");
+            $table->uuid("id")->primary();
+            $table->uuid("lady_id");
+            $table->uuid("room_id");
             $table->date("check_in");
             $table->date("check_out");
             $table->string("section");
             $table->auditColumns();
+
+            // Foreign key constraints
+            $table->foreign("lady_id")->references("id")->on("ladies")->cascadeOnDelete();
+            $table->foreign("room_id")->references("id")->on("rooms")->cascadeOnDelete();
         });
     }
 

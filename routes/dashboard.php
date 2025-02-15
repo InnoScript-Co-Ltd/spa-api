@@ -6,7 +6,8 @@ use App\Http\Controllers\Dashboard\{
     UserController,
     LadiesController,
     RoomController,
-    SectionController
+    SectionController,
+    EmployeeController
 };
 
 
@@ -67,10 +68,18 @@ Route::prefix('v1')->group(function () {
 
         Route::controller(SectionController::class)->prefix("sections")->group(function () {
             Route::get('/', 'index');          // List all sections
-            Route::post('/', 'store');        // Create a new section
-            Route::get('/{id}', 'show');      // Get a specific section
-            Route::put('/{id}', 'update');    // Update a section
-            Route::delete('/{id}', 'destroy');// Delete a section
+            Route::post('/', 'store');         // Create a new section
+            Route::get('/{id}', 'show');       // Get a specific section
+            Route::put('/{id}', 'update');     // Update a section
+            Route::delete('/{id}', 'destroy'); // Delete a section
+        });
+
+         Route::controller(EmployeeController::class)->prefix("employees")->group(function () {
+            Route::get('/', 'index');          // List all sections
+            Route::post('/', 'store');         // Create a new section
+            Route::get('/{id}', 'show');       // Get a specific section
+            Route::put('/{id}', 'update');     // Update a section
+            Route::delete('/{id}', 'destroy'); // Delete a section
         });
 
     });
