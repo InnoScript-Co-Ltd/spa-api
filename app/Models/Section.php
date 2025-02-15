@@ -4,14 +4,13 @@ namespace App\Models;
 
 use App\Models\Lady;
 use App\Models\Room;
-use App\Traits\SnowflakeID;
 use App\Traits\BasicAudit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
 {
-    use SnowflakeID, BasicAudit, SoftDeletes;
+    use BasicAudit, SoftDeletes;
 
     protected $table = "sections";
 

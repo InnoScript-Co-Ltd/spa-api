@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->snowflakeIdAndPrimary();
+            $table->uuid("id")->primary();
             $table->string('username');
             $table->string('password');
             $table->string('email')->unique()->nullable()->default(null);

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->snowflakeIdAndPrimary();
-            $table->snowflakeId('user_id');
+            $table->uuid("id")->primary();
+            $table->uuid('user_id');
             $table->string('employee_no')->unique();
             $table->string('name');
             $table->string('phone');
@@ -28,6 +28,8 @@ return new class extends Migration
             $table->datetime('leave_date');
             $table->string("remark");
             $table->auditColumns();
+
+            $table->foreign("user_id")->references("id")->on("users")->cascadeOnDelete();
         });
     }
 

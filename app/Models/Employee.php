@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\SnowflakeID;
 use App\Traits\BasicAudit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    use SnowflakeID, BasicAudit, SoftDeletes;
+    use BasicAudit, SoftDeletes;
 
     protected $tables = "employees";
 
