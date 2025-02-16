@@ -2,6 +2,11 @@
 
 namespace App\Http\Requests\Dashboard;
 
+use App\Enums\{
+    RoleTypeEnum,
+    UserStatusEnum
+};
+use App\Helpers\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserStoreRequest extends FormRequest
@@ -21,11 +26,16 @@ class UserStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        $roles = implode(',', (new Enum(RoleTypeEnum::class))->values());
+        $status = implode(',', (new Enum(UserStatusEnum::class))->values());
         return [
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'min:8', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
+            "role" => "required|in:$roles",
+            "status" => "required|in:$status"
         ];
     }
 }

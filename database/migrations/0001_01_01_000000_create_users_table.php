@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('phone')->unique()->nullable()->default(null);
             $table->timestamp('phone_confirm_at')->nullable()->default(null);
             $table->timestamp('email_confirm_at')->nullable()->default(null);
-            $table->string('role');
             $table->string('status');
             $table->rememberToken();
             $table->auditColumns();

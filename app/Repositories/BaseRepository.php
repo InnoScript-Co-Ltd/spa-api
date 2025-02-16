@@ -14,9 +14,18 @@ abstract class BaseRepository implements IRepository
 		$this->model = $model;
 	}
 
+	// public function all()
+	// {
+	// 	return $this->model->all();
+	// }
+
 	public function all()
 	{
-		return $this->model->all();
+		return $this->model->searchQuery()
+                ->sortingQuery()
+                ->filterQuery()
+                ->filterDateQuery()
+                ->paginationQuery();
 	}
 
 	public function find($id)
