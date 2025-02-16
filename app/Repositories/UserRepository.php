@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
@@ -12,25 +13,54 @@ class UserRepository extends BaseRepository
         parent::__construct($user);
     }
 
-    public function create($userData)
+    public function create(array $userData)
     {
-        $userData['password'] = Hash::make($userData['password']);
-        $userData['role_id'] = $userData['role_id'] ?? 1;
+        DB::beginTransaction();
 
-        return $this->model->create($userData);
+        try {
+            $userData['password'] = Hash::make($userData['password']);
+            $user = $this->model->create($userData);
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     public function update($id, array $userData)
     {
-        if (isset($userData['password'])) {
-            $userData['password'] = Hash::make($userData['password']);
-            unset($userData['password_confirmation']);
+        DB::beginTransaction();
+
+        try {
+            $user = $this->model->findOrFail($id);
+
+            if (isset($userData['password'])) {
+                $userData['password'] = Hash::make($userData['password']);
+            }
+
+            $user->update($userData);
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
         }
+    }
 
-        $user = $this->model->find($id);
-        $user->update($userData);
+    public function delete($id)
+    {
+        DB::beginTransaction();
 
-        return $user->fresh();
+        try {
+            $user = $this->model->findOrFail($id);
+            $user->delete();
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     public function checkEmailExists($email): bool
